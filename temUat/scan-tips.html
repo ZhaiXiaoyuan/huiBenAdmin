@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>夜彩</title>
+    <style type="text/css">
+        .relative {
+            position: relative;
+        }
+
+        .loader-ring {
+            position: absolute;
+            top:0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            margin: auto;
+            width: 100px;
+            height: 100px;
+        }
+
+        .loader-ring-light {
+            width: 100px;
+            height: 100px;
+            -moz-border-radius: 100px;
+            -webkit-border-radius: 100px;
+            border-radius: 100px;
+            -moz-box-shadow: 0 4px 0 #00abf2 inset;
+            -webkit-box-shadow: 0 4px 0 #00abf2 inset;
+            box-shadow: 0 4px 0 #00abf2 inset;
+            animation: rotate-360 1.5s linear infinite;
+        }
+
+        .loader-ring-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            -moz-border-radius: 100px;
+            -webkit-border-radius: 100px;
+            border-radius: 100px;
+            -moz-box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.3) inset;
+            -webkit-box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.3) inset;
+            box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.3) inset;
+        }
+
+        @keyframes rotate-360 {
+            from {
+                -moz-transform: rotate(0);
+                -ms-transform: rotate(0);
+                -webkit-transform: rotate(0);
+                transform: rotate(0);
+            }
+            to {
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        body {
+            background-color: rgba(0, 0, 0, 0.87);
+        }
+        .no-access-tips{
+            padding-top: 30%;
+            text-align: center;
+            font-size: 18px;
+            color: #fff;
+            font-family: '宋体';
+        }
+        .no-access-tips .icon{
+            margin: 0px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          /*  background: #fff;*/
+            border-radius: 50%;
+            width: 25%;
+            height: 25%;
+            margin-bottom: 20px;
+        }
+        .no-access-tips .icon img{
+            width: 100%;
+            height: 100%;
+        }
+        .cm-hidden{
+            display: none !important;
+        }
+
+        /*用浏览器打开引导弹窗*/
+        .guide-modal {
+            position: fixed;
+            z-index: 100;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        .guide-modal .mask {
+            position: absolute;
+            z-index: 0;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .guide-modal .modal-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+        }
+        .guide-modal .modal-header .guide-tips {
+            position: relative;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .guide-modal .modal-header .guide-tips .arrow-icon {
+            position: absolute;
+            right: 20px;
+            top: 12px;
+            display: inline-block;
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAAA+CAYAAAB9aNYrAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUZFOEQzRUI4MjRBMTFFNzlDODJGMjlBRTBDMjg0RkYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUZFOEQzRUM4MjRBMTFFNzlDODJGMjlBRTBDMjg0RkYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5RkU4RDNFOTgyNEExMUU3OUM4MkYyOUFFMEMyODRGRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5RkU4RDNFQTgyNEExMUU3OUM4MkYyOUFFMEMyODRGRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PhEENN0AAAVNSURBVHja5JtrbBRVFMdvaVmkBQFNtViwPEWIUUmMMQG1BqgBSVNiEYKmCjYEQ4BgY0MkEOADH4hi/KCVAI2gX4AigZQPhBQbHqEC0aS1xAhRITxaQWgRUCi6/o/733Cz2ed07uzs3ZP8MrMz987jv/fOnHPunZxgMKiyyIaBEnAsXqE+WSJGHqgG58FRMC6bRZH7exO0g80gh9vfjVcpx9LuI2K8DtaACdx2CTzG9RvsRl3Z0FKkJVSAH8BOCvIreAfUs4z8fhAsjXkUaSmWMBOcCt63c2Ah6Mv9B7l9NZdXwYBox7JBjGmgRRPjAlgMAloZWb/F/UXgCNc/sE2UUu3mxDrAMtA/StnJLHOGv6fz9+Vo5TNRjEmgSRPjCqgFBXHqrGLZOm3bSW5bbIMo23gz18DKWM+FCE6wTrm2bZb27AlkuiijwBowKMnyw8C/4E/wgLZd3JE2CrPAtgdtIpbwxndF2TdPe9bkhbdng5v/BpffRNknvswZMEYrZ31LGceucyPOs2cBW0sbu5T1LWU+vdwd4GaMMl8zUHwKzLI9IAzQvRfbGqfcXbCB6x/aLspc8Cj4EbQkKFvP1tIKCvIsFUS6TC3XP0qi/F/gSS6tTR28BhrBBTCaXSSlvIONrWQV1z9NVRBbW0ol2AUug7HglpMMlU3WF6zn+jongoQTul7aSDAU3GMG7IrLx1/C1vEz2OL4KB54lcVgI3MXkSZe5HKQ78J5hjPoCzIL5/hYpgWR8Px6RFasGRxl6K+nDkt7ea69PFZDb6/bpCC12k3LhU6M2N8HlGmpxB7wtsNzVfEY3WyZvhSlnBd5D8xPUDYXrNfKz0jxXKMZ8IlVu3H9JgTJZzcRW5FCvZWs8weTy8nUCWgtrcGtezAhSjUv8rtwKJ4kUraRdXckWWer9kwa4mdR9vNCqxy+qW4zBzI+QdllPM8d8Lyb92DCeXuGy8MO6l4E2+mqvxWn3GzwsTYufMLtMVe3bTCX1x3Wb+Rycoz9M5gYygVrua78Lko4wzXQYf3TXI6Jsq8cNDCB9AkH0FUmiNKa4J9OZHe4LIjYLlm03aA/2ARqTE5ZcNsatfyoExvEZXiaRC7ThfWM1STge08iFGMRmoG3z2DNmXrVQf1K1m3i2+iQ5vEu9WIUwNSBa7RYpyjFup+zbjvo0gbCX/ZqaMTUgfMY9ImdBiUp1OuIiKT3OhDWtwFhIWjljXVxLkgsr7OEKYRWTYxLYG46BtFMpyPFZ/kCzOHvHnCSwwm3QSF4WoXmn+n2GVgRZwDLbJLXoxztK3yFljFlGGnXOLxQzAy8ZM/+Tlvm2+PEtTh0z6rQLMUA05G/gU4VmtYpqcpF9ENUtogSy75irCMTf0vBP9kuShXYxsy7tKKz6b6gdA9xTAR1XK/xgyDpFkU+HtgH8inMJuUTS1f3KeTz4wlwCEx3MrxpkyiPgIP0T9rAi6DbT8OMXnefEaCZgvwEpvpNEK9FeQ4cB+PZQuTV+7vyoXklSgVbSBFoYpfpVD4106KIS79RhaZrSibtSz5Uu5WfzWC0OQIcZ8R7F7yfKVNNTUzFkJhmOVhNH+Q8o+QWlSlm4HOTdi0nshM8nGmTkt060BTty6vwMGZFps7U7k3lfmCO9t1MkJNm1sb4EEnZ+kzpB15Socl2wkPacEQd3zRXVYZbIlHkq0wZG34BTKF/ka/tb2EuZHu6UoemRCljGnAARShmzlS+8h6l7n/g/P9zWYVGAPeo0BjuWWWhSUB4DsvHY+yXyFXmtn8PvqU32qksN2kpB+h53iQdzJv+wqCtR2WZ/SfAAOCw3gtRwbSVAAAAAElFTkSuQmCC") no-repeat;
+            width: 35px;
+            height: 31px;
+            background-size: 100% 100%;
+        }
+        .guide-modal .modal-body {
+            padding-top: 25px;
+            text-align: center;
+        }
+    </style>
+    <script src="../build/webpack.prod.conf.js"></script>
+</head>
+<body>
+    <div class="scan-tips">
+        <div class="loading">
+            <div class='loader-ring'>
+                <div class='loader-ring-light'></div>
+                <div class='loader-ring-track'></div>
+            </div>
+        </div>
+        <div class="no-access-tips cm-hidden">
+            <div class="icon">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAHWklEQVR4Xu2df07bSBTHvxPsSiuB0xtsOEHhBIUTbJE2+XfDCaAnKJyg6QlK/yUrQU/Q9ASlJ2g4wSYBqVKheas3ToKTOPb4R8wbx/kPMrFn5jPvp2eeFaR/ruglHu5foUYNkGoAdDDrMlEDiv8X+BD1oVT/6T+qB0V9jFUf7vZ3HKmB5CErcZ27+tnA74fXGONAT/7ihGftMAOD6qGGHrbcrzj6IwAv68Wz/14GEIbw+HgCGr/JHUDcHGmJql3DcT5IgPN8QLQqGv0DoA2l9uLmrZDviW4AXMD1Pj2XaiseCEvDw8M7KLQLmeRUN6EBSF3Ddc+LlprigFgBIoQescQUB2b9QFg1Pd6/A+g01WIV8yPVgbN9vm5Vtl4g/47egOgjoF6KmddMHaEBlDrG3951pstE/Hg9QLTX9PARYNe1lJ8eHPd4HfYlfyClk4pVC2o90pIvkO7de/ttRVKJVh00d94m/dWq9vkA8WOKL2Liibxmx/Q6HL+43mEeBj87kMv7PeD3x42FMYWmg8qtY7S2ObhM/ckGhGGo31/K40WlnsfJDzmg3DrMAiU9kArGCnrZoKQDUsGIEaX0UJIDqWAY6rV0UJIB2XRvyhDFrFkK7ysZkMvhN5HeFOGrngSF10nnbO3tGUqrvm96H3Mgl3cdKDoxvXAx7egcjteZ+f86kTk6BdS7Yu5veBdSH9DaMUqumgHR6RBcGd6+mGaEY7S8i9CbXY7aUOBcmpyPwpFJUjIeiE4U/vomKtZgFdXyohOXl6OeLBVGAzgv9uMSkvFAuqMv8rK29BbNeidy+XeHrLreyxER3ZMemt5hVJ+igUhUVb71PkRzpxcN5I53rfBikvWJUV2rgfgG8ocoVTWbWouB8C4X19tflYhcDUSkVzUlYjEQHkKE1xUOxH/i90OWrAd7YzkQHorj7oYZ+HAg3RG7k7xnSuinBECAT2h6S1uhloGIlw7LjXpwiYdIyTIQ8dJRIiAhUjIPRHtWd/8J1VOBbpVCZbF1H8DxdoMe1zwQmcFUyPooCxDtcs0FufNApGZzl5CUCMhCNvgJiBXGvCRxyOICCxj3JyCiA8HFEZRIQhYCxQCQ4Y/CD8uk9h7KBoT6aNV3tf+o58QqdVUqt/dpSU7Ulg9E4gOdSOkpmYRoteU/cPOBWBEMliyXtbzgdCplIiE22Y+SqixOy7fquwrWROellxCg6SmFrtAna5tmQ/R41aGyz6CXVGVNDLtCd3gmbh9TbHxSQi9Lj5nOWUKEbZeJpWH3Jofo4X2ugJjwL6oN4WsFpKjJNrmPD8S2GKTMRp36Ct0RmcCT1aasRp2TixUQUWutAiIKRyUhwnBoIEMuefenuJ5tZOqEbiu3V9JKrOIQSTT0Q6oqMBSG5HOVXBRFxE8uyjsgGTtJJQ0MCcd2PqCKOoE7hWnpQrP0EW742Yo5wbJu4wYmj3B5FDbGIlTbX1kGSddjGX+L1XyiGtAtmvWGpduA9NO1AVA7WjqNq/cIjK9kHlaNXAHBbUA2GvbJ4Hj3ONdu14x07XgZZcuTSt/cRjnrtpImHa0F7ee2ktpqRyyYZ6MuEr6j5WnJtvQ4gtEw7WkUOLdu6YEde+baqKehB3b4l5ejGyi8MrpI1SifGQioq3mV5dsRiRV08hm41KssZB0sPRYtdXYT9otoCNdrrD4WraVEelmNhIOW3XypvIalpTVkz7Jx74xKa9glJZ/huKezqjp+gMuV5v4ynpTna2hYfIY7aEXkHlHmz4Yd/YnKM2kXWGJZ2MlyXnAVQxe55Ax24gJmWkr0O0H4Nab155PqVXemczTrZ5H9EisldAvH20te4o9HWxXBzH8tpi6COe2KyAM9lpaJNag3HF+3V78Q8teNMNUVW/8W0uoN6yDwxV72QspSVdfGlhqfqS6JXpc6g7P9Yb4Y//0JQNEGP3/LEH3F3IvxP9kTqdngaZVreS+yNHHRAzjjbUiQvXaF7/jUbpWiN5EyhuHuHCR5nV4yIDpg1K/J6wkz8ibTU2wbQyO+2KnkQCoo8WAZBrYO0rw+Lx2QCspqKBlg8EXTA6mgLEPJCCM7kBmU8cXGG3o24Ki106ipINlsEjK90qZ7Xym8qVU6Lx8gooPHeBucqUWCoM/kPvkCmaZZxnRRereY7UVNtU3evGYCYtomfyB8ZZ2QfGC7Iu9Fj0lmZ1Vbztq6bjsuUZjmVusBMu0JP08plbTQLZQ6zVsq8jfqUUtBG/z7M3lvCU24ftlWuNtnSdIgCe+gm69XQoI98jdOcBZW8KuUQqfwExz3bB3qKexuxQGZucgTMER8uEbg83o++ENDKHVdJIj1GnUTWfXfk9gGKT6WLSN7rIM7dODuXK9bNRUTh5iACGujvbLHU6jxm+IL4dAtqHYN1+kUpZaipql4lRUHzXeZD6DAr049yB8Q3QKqB0IPrtuTAKFYLysOQNz3WrXd74GoAUUNQO2B8NJ3SfTfC6WleMWr/sRlGQB0o/9Wqg9n++a5VFHcMKff/w9mpa/uaoge3gAAAABJRU5ErkJggg==" alt="">
+            </div>
+            系统未开放
+        </div>
+    </div>
+    <div class="guide-modal cm-hidden">
+        <div class="mask"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="guide-tips">
+                    <span>请点击右上角，在浏览器打开页面</span>
+                    <i class="icon arrow-icon"></i>
+                </div> </div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    /**
+     * 公共请求方法
+     */
+    function getData(url, method, data, callback,contentType,debug,async) {
+        var options = {
+            url: url,
+            type: method,
+            dataType:'json',
+            // contentType:"application/json",
+            data: data,
+            async:typeof async != 'undefined'?async:true,
+            success: function (result) {
+                callback(result);
+            },
+            /* timeout: 20000,*/
+            timeout: 500000,
+            error: function (xhr, textStatus) {
+                // alert(xhr.status);
+                if (xhr.status == "401") {
+
+                }else if(xhr.status!=0){
+
+                };
+            }
+        };
+        if ((method.toUpperCase() == 'PUT' || method.toUpperCase() == 'POST') && contentType == "json") {
+            options.data = JSON.stringify(data);
+            options.dataType = 'json';
+            options.contentType = 'application/json';
+        }
+        $.ajax(options);
+    };
+    /**
+     *获取地址栏参数
+     */
+    function getRequest(url) {
+        url=url?url:location.href;
+        var theRequest = new Object();
+        if(url.indexOf("?") != -1)//url中存在问号，也就说有参数。
+        {
+            var str = url.split('?')[1];
+            var strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++)
+            {
+                theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+            }
+
+        }
+        return theRequest;
+    }
+
+    /*判断是否是支付宝或微信*/
+    function IsWeixinOrAlipay(){
+        var ua = window.navigator.userAgent.toLowerCase();
+        //判断是不是微信
+        if ( ua.match(/MicroMessenger/i) == 'micromessenger' ) {
+            return "WeiXIN";
+        }
+        //判断是不是支付宝
+        if (ua.match(/AlipayClient/i) == 'alipayclient') {
+            return "Alipay";
+        }
+        //哪个都不是
+        return false;
+    }
+    if(IsWeixinOrAlipay()){
+        $('.guide-modal').removeClass('cm-hidden');
+    }else {
+        /**
+         * 页面跳转判断逻辑
+         */
+        var chanel=getRequest().channels;
+        var hostname=window.location.hostname;
+       if(hostname=='super.yeahcai.cn'){
+            window.location.href=window.location.origin+'/yecaiWeb/index.html#/login';
+        }else if(hostname=='admin.yeahcai.cn'){
+            window.location.href=window.location.origin+'/yecaiWeb/index.html#/adminLogin';
+        }else if(hostname=='user.yeahcai.cn'){
+           window.location.href=window.location.origin+'/yecaiWeb/index.html#/userLogin';
+        }else if(hostname=='shop.yeahcai.cn'){
+         /*  window.location.href=window.location.origin+'/yecaiWeb/index.html#/shopLogin';*/
+       }else{
+            if(chanel&&chanel!=''){
+                var basicUrl='http://api.yeahcai.cn/yecai/';//请求域名设置
+                var curDate=new Date();
+                var params={
+                    timeStamp:Math.ceil(new Date().getTime()/1000),
+                    time:parseInt(curDate.getHours()+''+curDate.getMinutes())
+                }
+
+                var targetUrl='http://yeahcai.happycp.net/index.htm?reqChannel='+getRequest().channels;//系统开放时的目标跳转地址
+                if(hostname=='happcpapp.yeahcai.cn'){
+                    targetUrl='https://yeahcai.happycp.net/invationActivity.htm?promoChannel='+getRequest().channels;
+                }
+                getData(basicUrl+'sys/checkQRTime','POST',params,function (resp) {
+                    $('.loading').addClass('cm-hidden');
+                    if(resp.respMsg=='系统未开放'){
+                        $('.no-access-tips').removeClass('cm-hidden');
+                    }else{
+                        window.location.href=targetUrl;
+                    }
+                })
+            }
+        }
+    }
+
+</script>
+</html>
