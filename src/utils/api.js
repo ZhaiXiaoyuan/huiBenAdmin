@@ -65,6 +65,186 @@ export default {
           params: {data:JSON.stringify(options)}
         });
       },
+        //获取用户基本信息
+        getUserDetail:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.user/user/getUserInfo',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取用户宝贝信息
+        getUserBabyList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.user/user/getUserBabyList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取用户备注
+        getUserRemarkList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.user/user/getUserRemarkList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //添加备注
+        addUserRemark:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.user/user/addUserRemark',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //更新用户备注
+        updateUserRemark:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.user/user/updateUserRemark',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //删除用户备注
+        removeUserRemark:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.user/user/removeUserRemark',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取用户借阅订单信息
+        getUserBorrowOrderList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.trade/borrowOrder/getUserBorrowOrder',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //运营管理员最终结算
+        finishBorrowOrder:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.trade/borrowOrder/finishBorrowOrder',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取某个借阅订单信息
+        getBorrowOrder:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.trade/borrowOrder/getBorrowOrder',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //管理员账号登录
+        login:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.system/admin/login',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取banner分页列表
+        getBannerList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.system/banner/getBannerInfo',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //新增banner行
+        addBanner:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.system//banner/addBanner',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //编辑banner信息
+        updateBanner:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.system/banner/updateBannerInfo',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //banner上移下移
+        swapBannerSort:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.system/banner/swapBannerSort',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //移除banner
+        removeBanner:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.system/banner/removeBanner',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
     }
   },
 

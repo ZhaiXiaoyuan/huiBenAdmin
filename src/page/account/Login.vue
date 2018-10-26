@@ -1,16 +1,7 @@
 <template>
     <div class="login-wrap">
         <div class="ms-title">
-            <span v-if="pageName=='login'">夜彩平台超级管理员</span>
-            <span v-if="pageName=='adminLogin'">
-                夜彩平台管理员
-            </span>
-            <span v-if="pageName=='shopLogin'">
-                夜彩-商户后台
-            </span>
-            <span v-if="pageName=='userLogin'">
-                夜彩-用户后台
-            </span>
+            <span v-if="pageName=='login'">管理员</span>
         </div>
         <div class="ms-login" v-if="pageName=='login'||pageName=='adminLogin'">
            <!-- <el-radio-group v-model="accountType" style="margin-bottom: 20px;" v-if="pageName=='adminLogin'">
@@ -62,6 +53,7 @@
         position: relative;
         width:100%;
         height:100%;
+        background: rgba(122, 205, 244, 1);
     }
     .ms-title{
         position: absolute;
@@ -151,14 +143,12 @@
                         return;
                     }
                     let fb=Vue.operationFeedback({text:'登录中...'});
-                    Vue.api.superManagerLogin({...Vue.sessionInfo(),account:this.ruleForm.username,password:this.ruleForm.password}).then((resp)=>{
-                        if(resp.respCode=='00'){
-                            localStorage.setItem('loginPage','login');
-                            this.$cookie.set('account',JSON.stringify({
-                                type:'superManager',
-                                account:this.ruleForm.username,
-                            }),7);
-                            this.$router.push({name:'shop',params:{}});
+                    Vue.api.login({adminName:this.ruleForm.username,password:this.ruleForm.password}).then((resp)=>{
+                        if(resp.respCode=='2000'){
+                            let data=JSON.parse(resp.respMsg);
+                            console.log('data:',data);
+                            this.$cookie.set('account',JSON.stringify(data),7);
+                            this.$router.push({name:'customerAdmin',params:{}});
                             fb.setOptions({type:'complete',text:'登录成功'});
                         }else{
                             fb.setOptions({type:'warn',text:'登录失败，'+resp.respMsg});

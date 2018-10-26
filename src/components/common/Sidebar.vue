@@ -17,7 +17,7 @@
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item :index="item.index" :key="item.index" :class="{'active':item.index.indexOf(pageName)>-1}">
                         <svg class="icon" aria-hidden="true">
                             <use :xlink:href="item.icon"></use>
                         </svg>
@@ -43,12 +43,21 @@
     }
     .sidebar > ul {
         height:100%;
+        background-color: #fff !important;
     }
     .icon{
         width: 18px;
         height: 18px;
         margin-right: 5px;
         vertical-align: middle;
+    }
+    .el-menu-item{
+        background-color: #fff !important;
+        color: rgba(122, 205, 244, 1) !important;
+    }
+    .el-menu-item.active{
+        background-color: rgba(122, 205, 244, 0.9) !important;
+        color: #fff !important;
     }
 </style>
 
@@ -57,6 +66,7 @@
     export default {
         data() {
             return {
+                pageName:null,
                 collapse: false,
                 itemsConfig:[
                     {
@@ -64,18 +74,20 @@
                         icon: '#icon-user',
                         index: '/customerAdmin',
                         title: '用户管理',
-                        subs: [
-                            {
-                                index: '/shop',
-                                title: '门店管理'
-                            },
-                            {
-                                index: '/user',
-                                title: '用户管理'
-                            }
-                        ]
                     },
                     {
+                        code:'02',
+                        icon: '#icon-dingdan',
+                        index: '/orderAdmin',
+                        title: '订单管理',
+                    },
+                    {
+                        code:'03',
+                        icon: '#icon-tupian',
+                        index: '/bannerAdmin',
+                        title: 'banner管理',
+                    },
+                  /*  {
                         code:'02',
                         icon: '#icon-paiming',
                         index: '2',
@@ -152,17 +164,20 @@
                         icon: '#icon-dingdan',
                         index: '/order',
                         title: '订单统计',
-                    },
+                    },*/
                 ],
                 items: []
             }
         },
         computed:{
             onRoutes(){
+                this.pageName=this.$route.name;
                 return this.$route.path.replace('/','');
             }
         },
         created(){
+            //
+            this.pageName=this.$route.name;
             // 通过 Event Bus 进行组件间通信，来折叠侧边栏
             bus.$on('collapse', msg => {
                 this.collapse = msg;

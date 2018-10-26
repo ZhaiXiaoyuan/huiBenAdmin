@@ -1,6 +1,6 @@
 <template>
     <div class="footer">
-        <p>Copyright  2018 深圳市夜彩科技有限公司 粤ICP备18047110号-1</p>
+        <p>Copyright  2018</p>
     </div>
 </template>
 <script>

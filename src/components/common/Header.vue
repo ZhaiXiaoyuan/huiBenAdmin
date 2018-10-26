@@ -3,18 +3,11 @@
         <div class="collapse-btn" @click="collapseChage">
             <i class="el-icon-menu"></i>
         </div>
-        <div class="logo">
-            夜彩平台·<span v-if="accountInfo.type=='superManager'">超级管理员</span>
-            <span v-if="accountInfo.type=='marketManager'">市场管理员</span>
-            <span v-if="accountInfo.type=='accountantManager'">财务管理员</span>
-            <span v-if="accountInfo.type=='userManager'">用户</span>
-            <span v-if="accountInfo.type=='shopManager'">门店</span>
-        </div>
+        <i class="icon logo-icon"></i>
         <div class="user-info">
             <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
-                    <img class="user-logo" src="../../../static/img/img.jpg">
-                 {{accountInfo.account}}
+                   您好，运营管理员
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
@@ -64,6 +57,7 @@
         font-size: 22px;
         line-height: 70px;
         color: #fff;
+        background: rgba(122, 205, 244, 1);
     }
     .collapse-btn{
         float: left;
@@ -73,15 +67,20 @@
     .collapse-btn:hover{
         background: rgb(40,52,70);
     }
-    .header .logo{
+    .header .logo-icon{
+        position: relative;
+        top:8px;
         float: left;
-        width:250px;
-        /* text-align: center; */
+        display: inline-block;
+        background: url("../../images/common/logo.png") no-repeat;
+        width: 160px;
+        height: 50px;
+        background-size: 100% 100%;
     }
     .user-info {
         float: right;
         padding-right: 50px;
-        font-size: 16px;
+        font-size: 18px;
         color: #fff;
     }
     .user-info .el-dropdown-link{

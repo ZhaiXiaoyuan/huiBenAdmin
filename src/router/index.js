@@ -14,6 +14,16 @@ export default new Router({
                     name:'customerAdmin',
                     component: resolve => require(['../page/customer/CustomerAdmin.vue'], resolve)
                 },
+                {
+                    path: '/orderAdmin',
+                    name:'orderAdmin',
+                    component: resolve => require(['../page/order/OrderAdmin.vue'], resolve)
+                },
+                {
+                    path: '/bannerAdmin',
+                    name:'bannerAdmin',
+                    component: resolve => require(['../page/banner/BannerAdmin.vue'], resolve)
+                },
             ]
         },
         {

@@ -136,13 +136,11 @@ export default {
               }
           },
         getAccountInfo:function () {
-            let loginPage=localStorage.getItem('loginPage');
             let account=Vue.cookie.get('account');
             if(account){
                 return JSON.parse(account);
             }else{
-                //临时测试
-              /*  router.push({name:loginPage?loginPage:'login'});*/
+                router.push({name:'login'});
                 return{};
             }
         },
