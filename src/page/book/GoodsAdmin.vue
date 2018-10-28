@@ -9,7 +9,7 @@
         <div class="container">
             <el-row class="handle-box">
                 <el-col :span="14">
-                    <el-button type="primary" icon="el-icon-plus">
+                    <el-button type="primary" icon="el-icon-plus" @click="openFormModal()">
                         添加书本信息
                     </el-button>
                     <el-button type="primary" icon="el-icon-upload2">
@@ -76,10 +76,11 @@
                             <el-input v-model="form.name" placeholder="请输入书名"></el-input>
                         </el-form-item>
                         <div>
-                            <el-form-item label="封面图片：" prop="cover">
+                            <el-form-item label="封面图片：">
                                 <div class="cm-pic-uploader" :class="{'anew':form.cover}">
                                     <div class="wrapper">
                                         <img :src="form.cover" alt="">
+                                        {{form.cover}}
                                         <div class="btn-wrap">
                                             <input  type="file" id="file-input" accept="image/*" @change="selectFile()">
                                             <div class="cm-btn upload-btn"><i class="icon el-icon-plus"></i></div>
@@ -87,6 +88,14 @@
                                         </div>
                                     </div>
                                 </div>
+                            </el-form-item>
+                        </div>
+                        <div>
+                            <el-form-item label="是否有音频：" prop="audio">
+                                <el-radio-group v-model="form.audio">
+                                    <el-radio label="true">有音频</el-radio>
+                                    <el-radio label="false">无音频</el-radio>
+                                </el-radio-group>
                             </el-form-item>
                         </div>
                         <el-form-item label="ISBN码：" prop="isbn">
@@ -107,7 +116,7 @@
                 <!--        <el-form-item label="译者：" prop="label">
                             <el-input v-model="form.label" placeholder="请输入译者"></el-input>
                         </el-form-item>-->
-                        <div v-for="(entry,index) in labelData" :key="index">
+                        <div v-for="(entry,index) in temLabelData" :key="index">
                             <el-form-item :label="entry.LabelLevel1.title+'：'" prop="label">
                                 <span v-for="(item,i) in entry.labelLevel2List" :key="item.id" :class="item.selected?'active':''" @click="selectLabel(item)" class="cm-btn label-item">{{item.title}}</span>
                             </el-form-item>
@@ -184,17 +193,30 @@
                   total:0,
                   loading:false
                 },
-                keyword:null,
+                keyword:'',
                 entryList:[],
                 curEntry:null,
 
 
                 labelData:[],
+                temLabelData:[],
                 editor:null,
 
                 formModalFlag:false,
                 form:{
-                    cover:null,
+                    cover:'',
+                    audio:'true',
+                    isbn:null,
+                    shelvesSerial:null,
+                    name:null,
+                    author:null,
+                    publisher:null,
+                    price:null,
+                    label:null,
+                    summary:null,
+                    detail:null,
+                    tpData:null,
+                    file:null,
                 },
             }
         },
@@ -209,7 +231,7 @@
                     audio:'',
                     labelArray:'',
                     searchType:'',//"","name","author","publisher"
-                    searchContent:'',
+                    searchContent:this.keyword,
                     sortType:'',//默认传“”,按热度传"borrowOrderCountMonth",
                     pageIndex:this.pager.pageIndex,
                     pageSize:this.pager.pageSize,
@@ -247,8 +269,41 @@
             openFormModal:function (entry) {
                 this.curEntry=entry;
                 console.log('this.curEntry:',this.curEntry);
+                this.temLabelData=JSON.parse(JSON.stringify(this.labelData));
                 if(this.curEntry){
-                    this.form={...this.curEntry.banner}
+                    this.form={...this.curEntry.bookSku};
+                    console.log('this.form:',Vue.tools.basicConfig.coverBasicUrl);
+                    this.form.cover=this.basicConfig.coverBasicUrl+this.curEntry.bookSku.coverPic;
+                    let labelList=[];
+                    this.curEntry.labelInfo.forEach((entry,index)=>{
+                        entry.labelLevel2JSONArray.forEach((item,i)=>{
+                            console.log('item:',item);
+                            labelList.push(item.labelLevel2.id);
+                        });
+                    });
+                    if(labelList.length>0){
+                        this.temLabelData.forEach((entry,index)=>{
+                            entry.labelLevel2List.forEach((item,i)=>{
+                                item.selected=labelList.indexOf(item.id)>-1?true:false;
+                            });
+                        });
+                    }
+                }else{
+                    this.form={
+                        cover:null,
+                        audio:'true',
+                        isbn:null,
+                        shelvesSerial:null,
+                        name:null,
+                        author:null,
+                        publisher:null,
+                        price:null,
+                        label:null,
+                        summary:null,
+                        detail:null,
+                        tpData:null,
+                        file:null,
+                    };
                 }
                 this.formModalFlag=true;
                 //
@@ -260,13 +315,14 @@
                     this.editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
 */
                     this.editor.txt.clear();
-
-                   /* editor.txt.html('<p>用 JS 设置的内容</p>')*/
+                    if(this.form.detail){
+                        this.editor.txt.html(this.form.detail)
+                    }
                 },500);
             },
             closeFormModal:function () {
                 this.formModalFlag=false;
-                this.$refs['form'].resetFields();
+               /* this.$refs['form'].resetFields();*/
             },
             save:function () {
                 if(!this.form.name){
@@ -305,7 +361,7 @@
                 }
                 //
                 this.form.labelList=[];
-                this.labelData.forEach((entry,index)=>{
+                this.temLabelData.forEach((entry,index)=>{
                     entry.labelLevel2List.forEach((item,i)=>{
                         if(item.selected){
                             this.form.labelList.push(item);
@@ -321,15 +377,15 @@
                     author:this.form.author,
                     publisher:this.form.publisher,
                     price:this.form.price,
-                    audio:true,
+                    audio:this.form.audio=='yes'?true:false,
                     label:this.form.labelList,
                     summary:this.form.summary,
                     detail:this.form.detail,
                     tpData:'',
                 }
                 if(this.curEntry){
-                    params.id=this.curEntry.banner.id;
-                    Vue.api.updateBanner(params).then((resp)=>{
+                    params.isbn=this.curEntry.bookSku.isbn;
+                    Vue.api.updateGoods(params,this.form.file).then((resp)=>{
                         if(resp.respCode=='2000'){
                             this.getList(this.pager.pageIndex);
                             fb.setOptions({type:'complete',text:'保存成功'});
@@ -351,17 +407,25 @@
                 }
             },
             remove:function (index) {
-                let fb=Vue.operationFeedback({text:'删除中...'});
-                Vue.api.remove({operationPlatformHandlerId:this.account.id,id:this.entryList[index].banner.id}).then((resp)=>{
-                    if(resp.respCode=='2000'){
-                        fb.setOptions({type:'complete',text:'删除成功'});
-                        this.entryList.splice(index,1);
-                        if(this.entryList.length==0){
-                            this.getList();
+                this.$confirm('确定删除该商品?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then((data) => {
+                    let fb=Vue.operationFeedback({text:'删除中...'});
+                    Vue.api.deleteGoods({warehouseHandlerId:this.account.id,isbn:this.entryList[index].bookSku.isbn}).then((resp)=>{
+                        if(resp.respCode=='2000'){
+                            fb.setOptions({type:'complete',text:'删除成功'});
+                            this.entryList.splice(index,1);
+                            if(this.entryList.length==0){
+                                this.getList();
+                            }
+                        }else{
+                            fb.setOptions({type:'warn',text:'删除失败，'+resp.respMsg});
                         }
-                    }else{
-                        fb.setOptions({type:'warn',text:'删除失败，'+resp.respMsg});
-                    }
+                    });
+                }).catch((data) => {
+
                 });
             },
             selectFile:function () {
@@ -379,7 +443,7 @@
             },
             selectLabel:function (entry) {
                 entry.selected=!entry.selected;
-            }
+            },
         },
         mounted () {
             //
@@ -388,7 +452,7 @@
             this.getList();
             this.getLabelList();
             //
-          /*  this.openFormModal();*/
+           /* this.openFormModal();*/
             //
 
 

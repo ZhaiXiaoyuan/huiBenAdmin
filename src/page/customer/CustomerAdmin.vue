@@ -239,7 +239,7 @@
                 Vue.api.getUserList(params).then((resp)=>{
                     if(resp.respCode=='2000'){
                         let data=JSON.parse(resp.respMsg);
-                        let list=data;
+                        let list=data.userList;
                         list.forEach((item,i)=>{
                             item.lastUserRemark=JSON.parse(item.lastUserRemark)
                         })

@@ -8,11 +8,7 @@
         </div>
         <div class="container">
             <el-row class="handle-box">
-                <el-col :span="10">
-                    <el-input v-model="keyword" placeholder="输入搜索关键字" class="handle-input mr10"></el-input>
-                    <el-button type="primary" icon="search" @click="getList()">搜索</el-button>
-                </el-col>
-                <el-col :span="14" style="text-align: right;">
+                <el-col :span="14">
                     <el-button type="primary" icon="el-icon-plus">
                         添加小书单
                     </el-button>
@@ -23,9 +19,13 @@
                         批量下架
                     </el-button>
                 </el-col>
+                <el-col :span="10" style="text-align: right;">
+                    <el-input v-model="keyword" placeholder="输入搜索关键字" class="handle-input mr10"></el-input>
+                    <el-button type="primary" icon="search" @click="getList()">搜索</el-button>
+                </el-col>
             </el-row>
-            <el-table :data="entryList" border style="width: 100%;" ref="multipleTable" v-loading="pager.loading">
-                <el-table-column label="选择" align="center" width="50">
+            <el-table :data="entryList" border style="width: 100%;" ref="multipleTable" v-loading="pager.loading" @selection-change="handleSelectionChange">
+                <el-table-column label="选择" align="center" type="selection" width="50">
                     <template slot-scope="scope">
 
                     </template>
@@ -34,7 +34,7 @@
                 <el-table-column prop="recommendBookList.booklistName" label="书单名"  align="center"></el-table-column>
                 <el-table-column label="封面图片" align="center" width="60">
                     <template slot-scope="scope">
-                        <img :src="basicConfig.basicUrl+scope.row.recommendBookList.cover" style="width: 40px;height: 40px;" alt="">
+                        <img :src="basicConfig.coverBasicUrl+scope.row.recommendBookList.cover" style="width: 40px;height: 40px;" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column prop="recommendBookList.bookCount" label="书本量"  align="center"></el-table-column>
@@ -131,6 +131,7 @@
                 curEntry:null,
 
 
+                multipleSelection:[],
 
                 formModalFlag:false,
                 form:{
@@ -147,6 +148,7 @@
                 this.pager.pageIndex=pageIndex?pageIndex:1;
                 let params={
                     searchContent:'',
+                    state:'',//enable,disable
                     pageIndex:this.pager.pageIndex,
                     pageSize:this.pager.pageSize,
                 }
@@ -154,7 +156,7 @@
                 Vue.api.getBookListList(params).then((resp)=>{
                     if(resp.respCode=='2000'){
                         let data=JSON.parse(resp.respMsg);
-                        let list=data;
+                        let list=data.recommendBookListJSONArray;
                         this.entryList=list;
                         this.pager.total=data.count;
                           console.log('this.entryList:',this.entryList);
@@ -246,6 +248,9 @@
                         }
                     });
                 });
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
             },
         },
         mounted () {

@@ -21,7 +21,7 @@
           </div>
           <div class="modal-footer">
              <!-- <span class="cm-btm handle-btn">upload</span>-->
-              <span class="cm-btm handle-btn" @click="save()">save</span>
+              <span class="cm-btm handle-btn" @click="save()">保存</span>
           </div>
       </div>
   </div>

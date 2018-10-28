@@ -53,7 +53,7 @@ export default {
           },*/
           basicConfig:{
               basicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://zyu-server.wicp.net:12412/',
-              coverBasicUrl:'http://zyu-server.wicp.net:13081/xyzhFile/coverPic/',
+              coverBasicUrl:'http://192.168.0.3:8080/xyzhFile/coverPic/',
               qrCodeBasicUrl:'http://shopqrcode.yeahcai.cn',
               yeCaiBasicUrl:'http://yecai.happycp.cn',
               appBaickUrl:'http://happcpapp.yeahcai.cn'

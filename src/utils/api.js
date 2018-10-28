@@ -377,6 +377,68 @@ export default {
                 params: {data:JSON.stringify(options)}
             });
         },
+        //设置sku状态
+        setGoodsStatus:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/book/setBookSkuState',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //更新现有sku信息
+        updateGoods:function (params,file) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/book/updateBookSkuBaseInfo',
+                apiParams:params
+            }
+            let allParams=new FormData();
+            if(file){
+                allParams.append('coverPicFile',file);
+            }
+            allParams.append('data',JSON.stringify(options));
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: allParams
+            });
+        },
+        updateGoods:function (params,file) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/book/updateBookSkuBaseInfo',
+                apiParams:params
+            }
+            let allParams=new FormData();
+            if(file){
+                allParams.append('coverPicFile',file);
+            }
+            allParams.append('data',JSON.stringify(options));
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: allParams
+            });
+        },
+        //删除某个sku
+        deleteGoods:function (params,file) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/book/delBookSku',
+                apiParams:params
+            }
+            let allParams=new FormData();
+            if(file){
+                allParams.append('coverPicFile',file);
+            }
+            allParams.append('data',JSON.stringify(options));
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: allParams
+            });
+        },
     }
   },
 
