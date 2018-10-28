@@ -6,6 +6,8 @@ import Distpicker from './Distpicker';
 import OperationFeedback from './OperationFeedback';
 import ViewPicModal from './ViewPicModal';
 import GenCode from './GenCode';
+import CropModal from './CropModal';
+
 
 
 /*全局组件注册配置*/
@@ -16,10 +18,12 @@ export default {
     Vue.component('OperationFeedback',OperationFeedback);
     Vue.component('ViewPicModal',ViewPicModal);
     Vue.component('GenCode',GenCode);
+    Vue.component('CropModal',CropModal);
 
     /*方法调度方式*/
     let OperationFeedbackConstructor = Vue.extend(OperationFeedback);
     let ViewPicModalConstructor = Vue.extend(ViewPicModal);
+    let CropModalConstructor=Vue.extend(CropModal);
     const functionObject={
         /**
          * 操作提示
@@ -69,6 +73,37 @@ export default {
             instance.options=options;
             instance.$mount();
             parentEle.appendChild(instance.$el);
+        },
+        /**
+         * 图片裁剪弹窗
+         * @param options
+         */
+        cropModal:function (options) {
+            options={...{
+                img:null,
+                size: 1,
+                full: false,
+                outputType: 'jpeg',
+                canMove: true,
+                fixedBox: false,
+                original: false,
+                canMoveBox: true,
+                autoCrop: true,
+                centerBox: false,
+                fixedNumber:[1,1],
+                fixed:true,
+                ok:null,
+            },...options};
+            //
+            let parentEle=document.getElementById('app');
+            //
+            let instance=new CropModalConstructor({});
+            instance.options=options;
+            instance.$mount();
+            parentEle.appendChild(instance.$el);
+            return {
+                close:instance.close
+            }
         },
     }
     /**/

@@ -52,7 +52,8 @@ export default {
               appBaickUrl:'http://happcpapp.yeahcai.com'
           },*/
           basicConfig:{
-              basicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://api.yeahcai.cn',
+              basicUrl:false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/':'http://zyu-server.wicp.net:12412/',
+              coverBasicUrl:'http://zyu-server.wicp.net:13081/xyzhFile/coverPic/',
               qrCodeBasicUrl:'http://shopqrcode.yeahcai.cn',
               yeCaiBasicUrl:'http://yecai.happycp.cn',
               appBaickUrl:'http://happcpapp.yeahcai.cn'
@@ -154,6 +155,27 @@ export default {
             }
             return fd;
         },
+        fileToBlob:function (file,callback) {
+              if (!file) {
+                  return false
+              }
+              var reader = new FileReader()
+              reader.onload = (e) => {
+                  let data
+                  if (typeof e.target.result === 'object') {
+                      // 把Array Buffer转化为blob 如果是base64不需要
+                      data = window.URL.createObjectURL(new Blob([e.target.result]))
+                  } else {
+                      data = e.target.result
+                  }
+                  //
+                  callback&&callback(data);
+              }
+              // 转化为base64
+              // reader.readAsDataURL(file)
+              // 转化为blob
+              reader.readAsArrayBuffer(file);
+          }
       }
 
       Object.assign(Vue, Vue.tools);

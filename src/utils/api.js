@@ -41,8 +41,8 @@ export default {
 
     /**/
     //临时测试
-  /*  let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/yecai':'http://api.yeahcai.com/yecai';*/
-      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://api.yeahcai.com/yecai':'https://api.linqi.tech:34631';
+    let basicUrl=false&&process.env.NODE_ENV=='development'?'http://zyu-server.wicp.net:19356/yecai':'http://zyu-server.wicp.net:12412/';
+/*      let basicUrl=false&&process.env.NODE_ENV=='development'?'http://api.yeahcai.com/yecai':'https://api.linqi.tech:34631';*/
 
       function sessionInfo() {
           return{
@@ -237,6 +237,138 @@ export default {
         removeBanner:function (params) {
             let options={...sessionInfo(),
                 api:'xyzh.system/banner/removeBanner',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取推荐书单列表
+        getBookListList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/recommendBookList/getRecommendBookList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //创建推荐书单
+        addBookList:function (params,file) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/recommendBookList/addRecommendBookList',
+                apiParams:params
+            }
+            let allParams=new FormData();
+            if(file){
+                allParams.append('coverPicFile',file);
+            }
+            allParams.append('data',JSON.stringify(options));
+            console.log('allParams:',allParams);
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: allParams
+            });
+        },
+        //更新推荐书单
+        updateBookList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/recommendBookList/updateRecommendBookList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //删除推荐书单
+        deleteBookList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/recommendBookList/delRecommendBookList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取sku列表
+        getGoodsList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/book/getBookSkuList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //获取标签列表
+        getLabelList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/label/getLabelList',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //添加新的sku
+        addGoods:function (params,file) {
+            let options={...sessionInfo(),
+                api:'xyzh.book/book/addBookSku',
+                apiParams:params
+            }
+            let allParams=new FormData();
+            if(file){
+                allParams.append('coverPicFile',file);
+            }
+            allParams.append('data',JSON.stringify(options));
+            console.log('allParams:',allParams);
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: allParams
+            });
+        },
+        //获取平台建议列表
+        getAdviceList:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.suggestion/suggestion/getSuggestionInfo',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //管理员批量审核平台建议
+        adminAuditInBatch:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.suggestion/suggestion/adminAuditInBatch',
+                apiParams:params
+            }
+            return Vue.http.ajax({
+                method: 'post',
+                url: basicUrl,
+                params: {data:JSON.stringify(options)}
+            });
+        },
+        //管理员批量审核平台建议
+        adminAuditInBatch:function (params) {
+            let options={...sessionInfo(),
+                api:'xyzh.suggestion/suggestion/adminAuditInBatch',
                 apiParams:params
             }
             return Vue.http.ajax({

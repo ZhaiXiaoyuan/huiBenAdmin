@@ -75,3 +75,31 @@ Vue.filter('orderStatus',function(str){
 Vue.filter('empty',function(str){
     return str?str:'-';
 });
+
+/*建议状态*/
+Vue.filter('adviceStatus',function(str){
+    str+='';
+    let result='';
+    switch (str){
+        //unaudited:未审核,operatorApproved:运营通过,operatorDisapproved:运营不通过,adminApproved:管理员通过,adminDisapproved:管理员不通过,paid:已发放奖励
+        case 'unaudited':
+            result='未处理';
+            break;
+        case 'operatorApproved':
+            result='已采纳';
+            break;
+        case 'operatorDisapproved':
+            result='未采纳';
+            break;
+        case 'adminApproved':
+            result='已采纳';
+            break;
+        case 'adminDisapproved':
+            result='未采纳';
+            break;
+        case 'paid':
+            result='已采纳';
+            break;
+    }
+    return result;
+});

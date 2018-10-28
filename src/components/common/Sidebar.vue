@@ -87,6 +87,30 @@
                         index: '/bannerAdmin',
                         title: 'banner管理',
                     },
+                    {
+                        code:'04',
+                        icon: '#icon-shu',
+                        index: '/bookListAdmin',
+                        title: '小书单管理',
+                    },
+                    {
+                        code:'05',
+                        icon: '#icon-shu',
+                        index: '/goodsAdmin',
+                        title: '商品管理',
+                    },
+                    {
+                        code:'06',
+                        icon: '#icon-shu',
+                        index: '/adviceAdmin',
+                        title: '平台建议',
+                    },
+                    {
+                        code:'07',
+                        icon: '#icon-shu',
+                        index: '/cardAdmin',
+                        title: '卡券配置管理',
+                    },
                   /*  {
                         code:'02',
                         icon: '#icon-paiming',
@@ -187,7 +211,7 @@
             this.accountAccess=null;
             //临时测试
             if(true||this.accountInfo.type=='superManager'){
-                this.accountAccess=['01','02','03','04','05','09','10'];
+                this.accountAccess=['01','02','03','04','05','06','07'];
                /* this.accountAccess='all';*/
             }else if(this.accountInfo.type=='marketManager'){
                 this.accountAccess=['01','02','10'];
